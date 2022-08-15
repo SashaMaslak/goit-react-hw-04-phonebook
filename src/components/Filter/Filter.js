@@ -1,3 +1,5 @@
-export function Filter(handleSetFilterValue) {
-   return <input type="text" onChange={handleSetFilterValue} />
+export function Filter({handleSetFilterValue}) {
+   return <input
+      type="text"
+      onChange={handleSetFilterValue} />
 }

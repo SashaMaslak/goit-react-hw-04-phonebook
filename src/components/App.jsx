@@ -18,7 +18,7 @@ export class App extends Component {
 
    state = {
       contacts: initialContacts,
-      filter: '',
+      filter: "",
    };
 
   handleAddContact = (contact) => {

@@ -1,4 +1,7 @@
 import { Component } from 'react';
+import { theme } from "theme";
+import { Box } from "./Box";
+import { Section } from './Section/Section'; 
 import { ContactForm } from 'components/ContactForm/ContactForm';
 import { ContactList } from 'components/ContactList/ContactList';
 import { Filter } from 'components/Filter/Filter';
@@ -44,11 +47,22 @@ export class App extends Component {
    render() {
       const filteredContacts = filterContacts(this.state.contacts, this.state.filter);
       return (
-      <div className="App">
-            <ContactForm onAddContact={this.handleAddContact} />
+      <Box
+      as={theme.as.s}
+      width={theme.space[12]}
+      bg={theme.colors.bgSection}
+      my={theme.space[5]}
+      mx={theme.position.a}
+      p={theme.space[5]}
+
+         >       <Section title={ 'Phonebook' }>
+               <ContactForm onAddContact={this.handleAddContact} />
+            </Section>
+            <Section title={'Contacts'}>
             <Filter handleSetFilterValue={this.setFilterValue} />
-            <ContactList contacts={filteredContacts} handleDeleteContact={this.handleDeleteContact} />
-         </div>
+               <ContactList contacts={filteredContacts} handleDeleteContact={this.handleDeleteContact} />
+               </Section>
+         </Box>
       );
    };
 };

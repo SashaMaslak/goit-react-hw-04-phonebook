@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { theme } from 'theme';
 import { Box } from './Box';
 import { Section } from './Section/Section';
@@ -16,72 +16,79 @@ const initialContacts = [
   { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
 ];
 
-export class App extends Component {
-  state = {
-    contacts: initialContacts,
-    filter: '',
-  };
+export function App() {
+  const [contacts, setContacts] = useState(
+    JSON.parse(window.localStorage.getItem('contacts')) ?? initialContacts
+  );
+  const [filter, setFilter] = useState('');
 
-  componentDidMount() {
-    const savedState = localStorage.getItem('contacts');
-    if (savedState) {
-      this.setState({ contacts: JSON.parse(savedState) });
-    }
-  }
+  // state = {
+  //   contacts: initialContacts,
+  //   filter: '',
+  // };
 
-  componentDidUpdate(prevProps, prevState) {
-    localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    if (prevState.contacts.length !== this.state.contacts.length) {
-      this.setState({ contacts: JSON.parse(localStorage.getItem('contacts')) });
-    }
-  }
+  // useEffect(() => {
+  //   const savedState = window.localStorage.getItem('contacts');
+  //   if (savedState) {
+  //     setContacts(JSON.parse(window.localStorage.getItem('contacts')));
+  //   }
+  // }, []);
 
-  handleAddContact = contact => {
-    if (this.state.contacts.some(cont => cont.name === contact.name)) {
+  // componentDidMount() {
+  //   const savedState = window.localStorage.getItem('contacts');
+  //   if (savedState) {
+  //     this.setState({ contacts: JSON.parse(savedState) });
+  //   }
+  // }
+
+  useEffect(() => {
+    window.localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+  //   if (prevState.contacts.length !== this.state.contacts.length) {
+  //     this.setState({ contacts: JSON.parse(localStorage.getItem('contacts')) });
+  //   }
+  // }
+
+  const handleAddContact = contact => {
+    if (contacts.some(cont => cont.name === contact.name)) {
       alert('Contact already exist');
       return;
     }
-    this.setState(prev => ({
-      contacts: [...prev.contacts, contact],
-    }));
+    setContacts(prev => [...prev, contact]);
   };
 
-  handleDeleteContact = id => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== id),
-    }));
+  const handleDeleteContact = id => {
+    setContacts(prev => prev.filter(contact => contact.id !== id));
   };
 
-  setFilterValue = ({ target: { value } }) => {
-    this.setState({ filter: value });
+  const setFilterValue = ({ target: { value } }) => {
+    setFilter({ value });
   };
 
-  render() {
-    const filteredContacts = filterContacts(
-      this.state.contacts,
-      this.state.filter
-    );
-    return (
-      <Box
-        as={theme.as.s}
-        width={theme.space[12]}
-        bg={theme.colors.bgSection}
-        my={theme.space[5]}
-        mx={theme.position.a}
-        p={theme.space[5]}
-      >
-        {' '}
-        <Section title={'Phonebook'}>
-          <ContactForm onAddContact={this.handleAddContact} />
-        </Section>
-        <Section title={'Contacts'}>
-          <Filter handleSetFilterValue={this.setFilterValue} />
-          <ContactList
-            contacts={filteredContacts}
-            handleDeleteContact={this.handleDeleteContact}
-          />
-        </Section>
-      </Box>
-    );
-  }
+  const filteredContacts = filterContacts(contacts, filter);
+  return (
+    <Box
+      as={theme.as.s}
+      width={theme.space[12]}
+      bg={theme.colors.bgSection}
+      my={theme.space[5]}
+      mx={theme.position.a}
+      p={theme.space[5]}
+    >
+      {' '}
+      <Section title={'Phonebook'}>
+        <ContactForm onAddContact={handleAddContact} />
+      </Section>
+      <Section title={'Contacts'}>
+        <Filter handleSetFilterValue={setFilterValue} />
+        <ContactList
+          contacts={filteredContacts}
+          handleDeleteContact={handleDeleteContact}
+        />
+      </Section>
+    </Box>
+  );
 }

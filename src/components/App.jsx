@@ -22,35 +22,9 @@ export function App() {
   );
   const [filter, setFilter] = useState('');
 
-  // state = {
-  //   contacts: initialContacts,
-  //   filter: '',
-  // };
-
-  // useEffect(() => {
-  //   const savedState = window.localStorage.getItem('contacts');
-  //   if (savedState) {
-  //     setContacts(JSON.parse(window.localStorage.getItem('contacts')));
-  //   }
-  // }, []);
-
-  // componentDidMount() {
-  //   const savedState = window.localStorage.getItem('contacts');
-  //   if (savedState) {
-  //     this.setState({ contacts: JSON.parse(savedState) });
-  //   }
-  // }
-
   useEffect(() => {
     window.localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-  //   if (prevState.contacts.length !== this.state.contacts.length) {
-  //     this.setState({ contacts: JSON.parse(localStorage.getItem('contacts')) });
-  //   }
-  // }
 
   const handleAddContact = contact => {
     if (contacts.some(cont => cont.name === contact.name)) {
@@ -65,10 +39,11 @@ export function App() {
   };
 
   const setFilterValue = ({ target: { value } }) => {
-    setFilter({ value });
+    setFilter(value);
   };
 
   const filteredContacts = filterContacts(contacts, filter);
+  console.log(filter);
   return (
     <Box
       as={theme.as.s}
